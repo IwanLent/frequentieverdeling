@@ -17,20 +17,14 @@ def analyse_enquête_met_weging(df, kolomnamen, kolom_labels, gewichtsvariabele=
             if gewogen:
                 gew = df[kolom] * df[gewichtsvariabele]
                 gemiddelde = gew.sum() / df[gewichtsvariabele].sum()
-                mediaan = df[kolom].median()
-                std = np.average((df[kolom] - gemiddelde) ** 2, weights=df[gewichtsvariabele]) ** 0.5
             else:
                 gemiddelde = df[kolom].mean()
-                mediaan = df[kolom].median()
-                std = df[kolom].std()
 
             analyseresultaten.append({
                 "vraag": f"{kolom}: {vraagtekst}",
                 "type": "schaal",
                 "data": {
-                    "gemiddelde": gemiddelde,
-                    "mediaan": mediaan,
-                    "std": std
+                    "gemiddelde": gemiddelde
                 }
             })
         else:
@@ -77,12 +71,10 @@ def schrijf_resultaten_naar_word(analyseresultaten, bestandsnaam="rapport_enquet
         elif resultaat["type"] == "schaal":
             schaal = resultaat["data"]
             doc.add_paragraph(f"Gemiddelde: {schaal['gemiddelde']:.1f}")
-            doc.add_paragraph(f"Mediaan: {schaal['mediaan']:.1f}")
-            doc.add_paragraph(f"Standaardafwijking: {schaal['std']:.1f}")
 
         doc.add_paragraph("")  # lege regel tussen vragen
 
-    output_path = f"/mnt/data/enquete_analyse_functies_v2.py"
+    output_path = f"/mnt/data/enquete_analyse_functies_exec_ready.py"
     with open(output_path, "w") as file:
         file.write('')
     doc.save(output_path)
